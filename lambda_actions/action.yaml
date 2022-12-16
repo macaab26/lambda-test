@@ -1,0 +1,16 @@
+# action.yml
+name: 'Build image'
+description: 'Build docker image'
+inputs:
+  who-to-greet:  # id of input
+    description: 'Mario :)'
+    required: true
+    default: 'Unknown'
+outputs:
+  time: # id of output
+    description: 'The time spent'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.who-to-greet }}

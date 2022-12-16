@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Create new image from Dockerfile
         id: build
-        uses: lambda_actions
+        uses: lambda-test
         with:
           who-to-greet: 'Mario :)'
       # Use the output from the `build` step

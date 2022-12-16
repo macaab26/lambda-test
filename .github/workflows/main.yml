@@ -2,11 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/CICD_IAC" ]
   pull_request:
     branches: [ "main" ]
-  commit:
-    branches: [ "feature/CICD_IAC" ]
 
 jobs:
   create_image:

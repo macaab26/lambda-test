@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Create new image from Dockerfile
         id: build
-        uses: actions/build_docker
+        uses: lambda_actions
         with:
           who-to-greet: 'Mario :)'
       # Use the output from the `build` step

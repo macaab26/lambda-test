@@ -6,16 +6,34 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# jobs:
+#   create_image:
+#     runs-on: ubuntu-latest
+#     name: A job to build the new image
+#     steps:
+#       - name: Create new image from Dockerfile
+#         id: build
+#         uses: macaab26/lambda-test
+#         with:
+#           who-to-greet: 'Mario :)'
+#       # Use the output from the `build` step
+#       - name: Get the output time
+#         run: echo "The time was ${{ steps.build.outputs.time }}"
+
 jobs:
   create_image:
     runs-on: ubuntu-latest
     name: A job to build the new image
     steps:
-      - name: Create new image from Dockerfile
-        id: build
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
         uses: macaab26/lambda-test
+      - name: Hello world action step
+        uses: ./ # Uses an action in the root directory
+        id: build
         with:
           who-to-greet: 'Mario :)'
-      # Use the output from the `build` step
+      # Use the output from the `hello` step
       - name: Get the output time
-        run: echo "The time was ${{ steps.build.outputs.time }}"
+        run: echo "The time was ${{ steps.hello.outputs.time }}"

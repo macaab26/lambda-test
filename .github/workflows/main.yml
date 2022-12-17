@@ -6,20 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# jobs:
-#   create_image:
-#     runs-on: ubuntu-latest
-#     name: A job to build the new image
-#     steps:
-#       - name: Create new image from Dockerfile
-#         id: build
-#         uses: macaab26/lambda-test
-#         with:
-#           who-to-greet: 'Mario :)'
-#       # Use the output from the `build` step
-#       - name: Get the output time
-#         run: echo "The time was ${{ steps.build.outputs.time }}"
-
 jobs:
   create_image:
     runs-on: ubuntu-latest
@@ -29,11 +15,8 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Hello world action step
-        uses: ./ # Uses an action in the root directory
-        id: build
-        with:
-          who-to-greet: 'Mario :)'
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"

@@ -14,9 +14,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Debug
-        run: ls       
+        uses: actions/checkout@v2 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
       # Use the output from the `hello` step

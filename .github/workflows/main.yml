@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/CICD_IAC" ]
   pull_request:
     branches: [ "main" ]
 
@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to build the new image
     steps:
-      - name: Create new image from Dockerfile
-        id: build
-        uses: actions/build_docker
-        with:
-          who-to-greet: 'Mario :)'
-      # Use the output from the `build` step
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2 
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
+      # Use the output from the `hello` step
       - name: Get the output time
-        run: echo "The time was ${{ steps.build.outputs.time }}"
+        run: echo "The time was ${{ steps.hello.outputs.time }}"

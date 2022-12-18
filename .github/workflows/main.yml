@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
+ #     - name: Build the Docker image
+ #       run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
       - name: Login to ECR
         id: ecr
         uses: elgohr/ecr-login-action@v3

@@ -18,7 +18,7 @@ Resources:
   MyRepository: 
     Type: AWS::ECR::Repository
     Properties: 
-      RepositoryName: "main-repository"
+      RepositoryName: "node-resize"
       RepositoryPolicyText: 
         Version: "2012-10-17"
         Statement: 

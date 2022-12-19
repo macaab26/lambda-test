@@ -20,8 +20,7 @@ let response;
  */
 exports.lambdaHandler = async (event, context) => {
 
-    //const S3_BUCKET = process.env.S3_BUCKET;
-    const S3_BUCKET = "mario-resized-images";
+    const S3_BUCKET = process.env.S3_BUCKET;
 
     const image_max_size = 456;
     const image_sizes = [image_max_size,200,75];

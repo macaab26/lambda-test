@@ -28,3 +28,4 @@ jobs:
           password: ${{ steps.ecr.outputs.password }}
           registry: ${{ steps.ecr.outputs.registry }}
           dockerfile: Dockerfile
+          tags: "latest"

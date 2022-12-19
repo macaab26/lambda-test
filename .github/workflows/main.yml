@@ -9,12 +9,10 @@ on:
 jobs:
   create_image:
     runs-on: ubuntu-latest
-    name: A job to build the new image
+    name: A job to build and push the new image
     steps:
       - name: Checkout
         uses: actions/checkout@v2 
- #     - name: Build the Docker image
- #       run: docker build . --file Dockerfile --tag node-resize:$(date +%s)
       - name: Login to ECR
         id: ecr
         uses: elgohr/ecr-login-action@v3
@@ -22,7 +20,7 @@ jobs:
           access_key: ${{ secrets.AWS_ACCESS_KEY }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ${{ secrets.AWS_REGION }}
-      - name: Publish to Registry
+      - name: Build image + Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: node-resize

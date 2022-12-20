@@ -3,16 +3,28 @@ Parameters:
   lambdaFunctionName: 
     Type: String
     Default: "ImageResize"
+  apiName: 
+    Type: String
+    Default: "lambda-api-gw"    
   bucketName: 
     Type: String
     Default: "mario-resized-images"    
 
 Resources:
 
+  account:
+    Type: 'AWS::ApiGateway::Account'
+    Properties:   
+      CloudWatchRoleArn: !GetAtt 
+        - CloudWatchRole
+        - Arn
+
   apiGateway:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
-      Name: "lambda-api-gw"
+      BinaryMediaTypes:
+        - "*/*"
+      Name: !Ref "apiName"
       Description: "API to connect with the resize Lambda"
 
   proxyResource:
@@ -44,8 +56,21 @@ Resources:
     DependsOn:
       - "apiGatewayRootMethod"
     Properties:
-      RestApiId: !Ref "apiGateway"
-      StageName: "PRD"          
+      RestApiId: !Ref "apiGateway"        
+
+  prdStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn:
+      - "apiGatewayRootMethod"  
+    Properties:
+      StageName: "PRD"
+      RestApiId: !Ref apiGateway
+      DeploymentId: !Ref apiGatewayDeployment
+      Description: "prd stage description"
+      TracingEnabled: true
+      AccessLogSetting:
+        DestinationArn: !GetAtt apiLogGroup.Arn
+        Format: $context.extendedRequestId $context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] "$context.httpMethod $context.resourcePath $context.protocol" $context.status $context.responseLength $context.requestId
 
   lambdaFunction:
     Type: "AWS::Lambda::Function"
@@ -57,6 +82,8 @@ Resources:
       FunctionName: !Ref "lambdaFunctionName"
       Role: !GetAtt "lambdaIAMRole.Arn"
       Timeout: 60
+      TracingConfig: 
+        Mode: Active
 
   lambdaApiGatewayInvoke:
     Type: "AWS::Lambda::Permission"
@@ -109,9 +136,34 @@ Resources:
               - Action:
                   - "s3:*"
                 Effect: "Allow"
+                Resource:
+                  - !Sub "arn:aws:s3:::${bucketName}/*"
+          PolicyName: "lambdaS3"
+        - PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - "xray:PutTraceSegments"
+                  - "xray:PutTelemetryRecords"
+                Effect: "Allow"
                 Resource: "*"
-#                  - !Sub "arn:aws:s3:::${bucketName}/*"
-          PolicyName: "lambdaS3"           
+          PolicyName: "lambdaXRay"          
+
+  CloudWatchRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - >-
+          arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
 
   lambdaLogGroup:
     Type: "AWS::Logs::LogGroup"
@@ -119,8 +171,14 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${lambdaFunctionName}"
       RetentionInDays: 90          
 
-  S3Bucket:
-    Type: "AWS::S3::Bucket"
-    DeletionPolicy: Retain
+  apiLogGroup:
+    Type: "AWS::Logs::LogGroup"
     Properties:
-      BucketName: !Ref "bucketName"     
+      LogGroupName: !Sub "/aws/api/${apiName}"
+      RetentionInDays: 90 
+
+  # S3Bucket:
+  #   Type: "AWS::S3::Bucket"
+  #   DeletionPolicy: Retain
+  #   Properties:
+  #     BucketName: !Ref "bucketName"     

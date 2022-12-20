@@ -1,5 +1,4 @@
 #FROM public.ecr.aws/lambda/nodejs:12.2022.12.14.06
-#FROM node:12.18.1
 FROM public.ecr.aws/lambda/nodejs:14.2022.12.14.06
 
 WORKDIR /var/task

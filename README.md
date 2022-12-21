@@ -1,6 +1,6 @@
 # Lambda-test
 
-This is repo contains all the needed code to deploy an image resize application (NodeJS) into AWS through CloudFormation.
+This repo contains all the needed code to deploy an image resize application (NodeJS) into AWS through CloudFormation.
 
 ## Basic components
 

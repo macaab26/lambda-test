@@ -153,7 +153,7 @@ Resources:
     Type: AWS::IAM::User
     Properties: 
       LoginProfile: 
-        Password: "Aircalltest22!"
+        Password: $AIRCALL_PASS
       Policies: 
         - PolicyDocument:
             Version: "2012-10-17"

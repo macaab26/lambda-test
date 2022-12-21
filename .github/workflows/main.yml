@@ -1,8 +1,6 @@
-name: Docker Image CI
+name: Docker Image CICD
 
 on:
-  push:
-    branches: [ "main", "feature/ECR_and_image_push" ]
   pull_request:
     branches: [ "main" ]
 

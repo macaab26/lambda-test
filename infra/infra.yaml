@@ -194,8 +194,8 @@ Resources:
       LogGroupName: !Sub "/aws/api/${apiName}"
       RetentionInDays: 90 
 
-  # S3Bucket:
-  #   Type: "AWS::S3::Bucket"
-  #   DeletionPolicy: Retain
-  #   Properties:
-  #     BucketName: !Ref "bucketName"     
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Ref "bucketName"     
